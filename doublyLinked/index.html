@@ -71,17 +71,23 @@ var linkedList = {
           id: newID,
           data: nodeData,
           next: beforeNodeID,
-		  prev: head
+		  prev: -1;
       }
       if(linkedList.head == null){
         linkedList.head = newID;
       }
       if(beforeNodeID){
-          var prevPos  = linkedList.getParentPos(beforeNodeID);
-          if(prevPos >= 0)
-            linkedList.nodes[prevPos].next = newID;
-		  linkedList.nodes[prevPos].last = newNode.id;
-      }
+		  var prevPos  = linkedList.getParentPos(beforeNodeID);
+		  var nextPos = linkedList.getChild(beforeNodeID);
+		  if(prevPos >= 0){
+			  linkedList.nodes[prevPos].next = newID;
+		  }
+		  if(nextPos >= 0){
+			 // linkedList.nodes[prevPos].last = nextPos.id;
+			 //this line is my issue. not sure how to solve it.
+		  }
+	  }
+	  
       if(beforeNodeID == linkedList.head){
         linkedList.head = newID;
       }
@@ -100,9 +106,12 @@ var linkedList = {
     deleteNode: function(id){
         var pos = linkedList.getNodePos(id);
         var prevPos  = linkedList.getParentPos(id);
+		var nextPos = linkedList.getChildPos(id);
         var next = linkedList.getNode(id).next;
+		var prev = linkedList.getNode(id).prev;
         if(prevPos >= 0)
           linkedList.nodes[prevPos].next = next;
+		linkedList.nodes[nextPos].last = prev;
         linkedList.nodes.splice(pos, 1);
         if(id == linkedList.head){
           linkedList.head = next; 
@@ -163,17 +172,16 @@ var linkedList = {
     },
 	
     getChild: function (id){ 
-        var list = linkedList.nodes;
-        var ret = null;
-        for(var i = 0; i < list.length; i++){
-          if(linkedList.getNodePos(list[i].id).last === id){
+		var list = linkedList.nodes;
+		var ret = null;
+		for(var i = 0; i < list.length; i++){
+			if(linkedList.getNodePos(list[i].id).last === id){
             ret = list[i];
             break;
           }
         }
         return ret;
       },
-    },
 	
     getNode: function(id){
       var list = linkedList.nodes;
@@ -186,6 +194,7 @@ var linkedList = {
       }
       return ret;
     },
+	
     getParentPos: function(id){
       var pos = -1;
       var list = linkedList.nodes;
@@ -197,6 +206,19 @@ var linkedList = {
       }
       return pos;
     },
+	
+    getChildPos: function(id){
+      var pos = -1;
+      var list = linkedList.nodes;
+      for(var i = 0; i < list.length; i++){
+        if(list[i].prev === id){
+          pos = i;
+          break;
+        }
+      }
+      return pos;
+    },
+	
     getNodePos: function(id){
       var pos = -1;
       var list = linkedList.nodes;
