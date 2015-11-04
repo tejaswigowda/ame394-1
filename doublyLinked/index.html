@@ -71,7 +71,7 @@ var linkedList = {
           id: newID,
           data: nodeData,
           next: beforeNodeID,
-		  prev: -1;
+		  prev: -1
       }
       if(linkedList.head == null){
         linkedList.head = newID;
@@ -82,8 +82,10 @@ var linkedList = {
 		  if(prevPos >= 0){
 			  linkedList.nodes[prevPos].next = newID;
 		  }
-		  if(nextPos >= 0){
-			 // linkedList.nodes[prevPos].last = nextPos.id;
+		  if(nextPos == 0)
+			  linkedList.nodes[prevPos].prev = -1;
+		  if(nextPos > 0){
+			 linkedList.nodes[prevPos].prev = nextPos.id;
 			 //this line is my issue. not sure how to solve it.
 		  }
 	  }
@@ -109,9 +111,15 @@ var linkedList = {
 		var nextPos = linkedList.getChildPos(id);
         var next = linkedList.getNode(id).next;
 		var prev = linkedList.getNode(id).prev;
-        if(prevPos >= 0)
-          linkedList.nodes[prevPos].next = next;
-		linkedList.nodes[nextPos].last = prev;
+        if(prevPos >= 0){
+			linkedList.nodes[prevPos].next = next
+		}
+	    if(nextPos == 0)
+		  linkedList.nodes[prevPos].prev = -1;
+	  
+		if(prevPos > 0){
+			linkedList.nodes[nextPos].prev = prev;
+		}
         linkedList.nodes.splice(pos, 1);
         if(id == linkedList.head){
           linkedList.head = next; 
@@ -175,7 +183,7 @@ var linkedList = {
 		var list = linkedList.nodes;
 		var ret = null;
 		for(var i = 0; i < list.length; i++){
-			if(linkedList.getNodePos(list[i].id).last === id){
+			if(linkedList.getNodePos(list[i].id).prev === id){
             ret = list[i];
             break;
           }
