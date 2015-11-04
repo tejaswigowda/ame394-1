@@ -118,7 +118,7 @@ var linkedList = {
 		  linkedList.nodes[prevPos].prev = -1;
 	  
 		if(prevPos > 0){
-			linkedList.nodes[nextPos].prev = prev;
+			//linkedList.nodes[nextPos].prev = prev;
 		}
         linkedList.nodes.splice(pos, 1);
         if(id == linkedList.head){
@@ -139,10 +139,6 @@ var linkedList = {
 		var deleteID = linkedList.getNodeFromPos(fromPos).id;
 		var insertBeforeID =linkedList.getNodeFromPos(toPos).id;
 		
-		var swap = moveData;
-		
-		moveData = newPlace;
-		newPlace = swap;
 		
 		
 		// your code here
