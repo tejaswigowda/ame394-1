@@ -1,0 +1,212 @@
+<html>
+<head>
+
+
+<script>
+function calculatePostfix()
+{
+	var infix = document.getElementById("inputEq").value;
+	var tokens = [];
+	for (var i = 0; i < infix.length; i++){
+		if(infix[i] != " "){
+			tokens[tokens.length] = infix[i];
+		}
+	}
+	evalPostfix(getPostfix(tokens));
+}
+
+var stackObj = {
+	content: [],
+	push: function(val){
+		stackObj.content[stackObj.content.length] = val;
+  },
+  pop: function(){
+    var top = stackObj.getTop();
+    if(top!=null){
+      stackObj.content = stackObj.content.splice(0,stackObj.content.length -1);
+    }
+    return top;
+  },
+  getTop: function(){
+    if(stackObj.content.length == 0){
+      return null;
+    }
+    return stackObj.content[stackObj.content.length-1];
+  },
+  initialize: function(initStack)
+  {
+    stackObj.content = initStack;
+  }
+}
+function updateVisualization(step, tokens, postfix)
+{
+  var outS = "<hr><h1>Step " + (step + 1) + "</h1>";
+  //update infix
+  outS += "<div>";
+  var infix = tokens;
+  outS += "<h2>Infix:</h2>";
+  for (var i = 0; i < tokens.length; i++){
+    if( i == step ){
+      outS += "<span class='smallBox'><b>" + tokens[i] + "</b></span>";
+    }
+    else{
+      outS += "<span class='smallBox'>" + tokens[i] + "</span>";
+    }
+  }
+  outS += "</div>";
+  //update stack
+  tokens = stackObj.content;
+  outS += "<div>";
+  outS += "<h2>Stack:</h2>";
+  for (var i = 0; i < tokens.length; i++){
+    outS += "<span class='smallBox'>" + tokens[i] + "</span>";
+  }
+  outS += "<span class='smallBox'><b>&lt;</b></span>";
+  outS += "</div>";
+  //update postfix string 
+  tokens = postfix;
+  outS += "<div>";
+  outS += "<h2>Postfix:</h2>";
+  for (var i = 0; i < tokens.length; i++){
+    if( i == step ){
+      outS += "<span class='smallBox'><b>" + tokens[i] + "</b></span>";
+    }
+    else{
+      outS += "<span class='smallBox'>" + tokens[i] + "</span>";
+    }
+  }
+  outS += "</div>";
+  document.getElementById("visual").innerHTML += outS;
+}
+
+var operators = ["*", "/", "+", "-"];
+function isOperator(t)
+{
+  if(operators.indexOf(t) >= 0){
+    return true;
+  }
+  return false;
+}
+function isPrecGreater(a, b)
+{
+  var pn1 = 1;
+  var pn2 = 1;
+  if(a == "*" || a == "/"){
+    pn1 = 2;
+  }
+  if(b == "*" || b == "/"){
+    pn2 = 2;
+  }
+  
+  if(pn1 >= pn2){
+    return true;
+  }
+  return false;
+}
+function getPostfix(tokens)
+{
+	var postFix = "";
+	stackObj.initialize([]);
+	document.getElementById("visual").innerHTML = "";
+	for (var i = 0; i < tokens.length; i++){
+		var currScan = tokens[i];
+		if(isOperator(currScan)){ // is operator
+			var top = stackObj.getTop();
+			if(top != null){  // stack not empty
+				while(top && isPrecGreater(top, currScan)){
+					postFix += stackObj.pop();
+					top = stackObj.getTop();
+				}
+				stackObj.push(currScan);
+			}
+			else{  //stack is empty
+				stackObj.push(currScan);
+			}
+		}
+		else{ // is NOT an operator
+			postFix = postFix + currScan;
+		}
+		updateVisualization(i, tokens, postFix);
+	}
+	var top = stackObj.getTop();
+	if(top != null){ 
+		document.getElementById("visual").innerHTML += "<h1> Poping 
+		stack....</h1>";
+		while(top){
+			postFix += stackObj.pop();
+			top = stackObj.getTop();
+		}
+	}
+	updateVisualization(i, tokens, postFix);
+	document.getElementById("visual").innerHTML += "<h1> Result: " + postFix + 
+	"</h1><hr>";
+	return postFix;
+}
+function clear()
+{
+  document.getElementById("visual").innerHTML = "";
+  document.getElementById("inputEq").value = "";
+}
+
+function evaluatePostfix(stringIn){
+	for(var i = 0; i < stringIn.length; i++){
+		if(isOperator(stringIn[i]) == false){
+			stackObj.push(stringIn[i]);
+		}else{
+			var a = stackObj.pop();
+			var b = stackObj.pop();
+			var c = 0;
+			if (stringIn[i] == "+"){
+				c = a + b;
+			}	
+			else if (stringIn[i] == "-"){
+				c = a - b;
+			}   
+			else if (stringIn[i] == "*"){
+				c = a * b;
+			}
+			else if (stringIn[i] == "/"){
+				c = a / b;
+			}
+			stackObj.push(c);	
+		}
+	}
+	stackObj.pop();
+}
+</script>
+
+
+<style>
+body
+{
+  font-size: 24px;
+}
+.smallBox b
+{
+  font-size: 150%;
+}
+.smallBox
+{
+  border: 1px solid;
+  display: inline-block;
+  padding: 10px;
+  vertical-align: middle;
+}
+</style>
+
+</head>
+
+<body>
+</h1> Simple Calculator </h1>
+
+<input type="text" id='inputEq'> 
+
+<a href='javascript:calculatePostfix()'> Calculate </a>
+  <a href='javascript:clear()'> Clear </a>
+
+<div id='visual'> 
+</div>
+</body>
+
+
+</html>
