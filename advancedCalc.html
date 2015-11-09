@@ -13,6 +13,7 @@ var calculatePostfix = function()
 		}
 	}
 	evaluatePostfix(getPostfix(tokens));
+	console.log(evaluatePostfix(getPostfix(tokens)));
 }
 
 var stackObj = {
@@ -97,12 +98,18 @@ function isPrecGreater(a, b)
   if (b == "^"){
 	  pn2 = 3;
   }
+  
+  
   if(a == "*" || a == "/"){
     pn1 = 2;
   }
-  if(b == "*" || b == "/"){
-    pn2 = 2;
+  if(a == "+" || a == "-"){
+    pn1 = 1;
   }
+  if(b == "+" || b == "-"){
+    pn2 = 1;
+  }
+  
   
   if(pn1 >= pn2){
     return true;
@@ -177,10 +184,16 @@ var evaluatePostfix = function(stringIn){
 			else if (stringIn[i] == "/"){
 				c = a / b;
 			}
+			else if (stringIn[i] == "^"){
+				c = a;
+				for(var i = 1; i <= b; i++){
+					c = c * a;
+				}
+			}
 			stackObj.push(c);	
 		}
 	}
-	stackObj.pop();
+	return stackObj.pop();
 }
 </script>
 
