@@ -3,7 +3,7 @@
 
 
 <script>
-function calculatePostfix()
+var calculatePostfix = function()
 {
 	var infix = document.getElementById("inputEq").value;
 	var tokens = [];
@@ -12,7 +12,7 @@ function calculatePostfix()
 			tokens[tokens.length] = infix[i];
 		}
 	}
-	evalPostfix(getPostfix(tokens));
+	evaluatePostfix(getPostfix(tokens));
 }
 
 var stackObj = {
@@ -137,9 +137,10 @@ function getPostfix(tokens)
 		updateVisualization(i, tokens, postFix);
 	}
 	var top = stackObj.getTop();
+	
+	
 	if(top != null){ 
-		document.getElementById("visual").innerHTML += "<h1> Poping 
-		stack....</h1>";
+		document.getElementById("visual").innerHTML += "<h1> Poping stack....</h1>";
 		while(top){
 			postFix += stackObj.pop();
 			top = stackObj.getTop();
@@ -156,7 +157,7 @@ function clear()
   document.getElementById("inputEq").value = "";
 }
 
-function evaluatePostfix(stringIn){
+var evaluatePostfix = function(stringIn){
 	for(var i = 0; i < stringIn.length; i++){
 		if(isOperator(stringIn[i]) == false){
 			stackObj.push(stringIn[i]);
