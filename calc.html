@@ -157,16 +157,16 @@ function evaluatePostfix(stringIn){
 			var b = stackObj.pop();
 			var c = 0;
 			if (stringIn[i] == "+"){
-				c = a + b;
+				c = b + a;
 			}	
 			else if (stringIn[i] == "-"){
-				c = a - b;
+				c = b - a;
 			}   
 			else if (stringIn[i] == "*"){
 				c = a * b;
 			}
 			else if (stringIn[i] == "/"){
-				c = a / b;
+				c = b / a;
 			}
 			stackObj.push(c);	
 		}

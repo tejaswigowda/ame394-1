@@ -11,6 +11,7 @@ var calculatePostfix = function()
 		if(infix[i] != " "){
 			tokens[tokens.length] = infix[i];
 		}
+		
 	}
 	evaluatePostfix(getPostfix(tokens));
 	console.log(evaluatePostfix(getPostfix(tokens)));
@@ -39,6 +40,7 @@ var stackObj = {
     stackObj.content = initStack;
   }
 }
+
 function updateVisualization(step, tokens, postfix)
 {
   var outS = "<hr><h1>Step " + (step + 1) + "</h1>";
@@ -80,7 +82,8 @@ function updateVisualization(step, tokens, postfix)
   document.getElementById("visual").innerHTML += outS;
 }
 
-var operators = ["*", "/", "+", "-", "^", "(", ")"];
+
+var operators = ["*", "/", "+", "-", "^", "("];
 function isOperator(t)
 {
   if(operators.indexOf(t) >= 0){
@@ -99,7 +102,6 @@ function isPrecGreater(a, b)
 	  pn2 = 3;
   }
   
-  
   if(a == "*" || a == "/"){
     pn1 = 2;
   }
@@ -109,6 +111,9 @@ function isPrecGreater(a, b)
   if(b == "+" || b == "-"){
     pn2 = 1;
   }
+  if ( b == "(" || a == "(") {
+	return false;
+  }
   
   
   if(pn1 >= pn2){
@@ -116,48 +121,52 @@ function isPrecGreater(a, b)
   }
   return false;
 }
-function getPostfix(tokens)
-{
+
+function getPostfix(tokens){
 	var postFix = "";
-	stackObj.initialize([]);
-	document.getElementById("visual").innerHTML = "";
-	for (var i = 0; i < tokens.length; i++){
-		var currScan = tokens[i];
-		if(isOperator(currScan)){ // is operator
-			var top = stackObj.getTop();
-			if(top != null){  // stack not empty
-				if(top != "(" || top != ")"){
-					while(top && isPrecGreater(top, currScan)){
-						postFix += stackObj.pop();
-						top = stackObj.getTop();
-					}
-					stackObj.push(currScan);
+  	stackObj.initialize([]);
+  	document.getElementById("visual").innerHTML = "";
+  	for (var i = 0; i < tokens.length; i++){
+			var currScan = tokens[i];
+		if(isOperator(currScan)) { // is operator
+  				var top = stackObj.getTop();
+  		  		if(top != null) {  // stack not empty
+    				while(top && isPrecGreater(top, currScan)){
+      			  		postFix += stackObj.pop();
+      					top = stackObj.getTop();
+    				}
+    				stackObj.push(currScan);
+  		  		} else {  //stack is empty
+    				stackObj.push(currScan);
 				}
+		} else if (currScan == ")") {
+			console.log(stackObj.content.length);
+			for (var j = 0; j < stackObj.content.length; j++) {
+				if (stackObj.getTop() == "(") {
+					stackObj.pop();
+					break;
+				}
+				postFix += stackObj.pop();
 			}
-			else{  //stack is empty
-				stackObj.push(currScan);
-			}
-		}
-		else{ // is NOT an operator
-			postFix = postFix + currScan;
-		}
-		updateVisualization(i, tokens, postFix);
-	}
+  		} else { // is NOT an operator
+  			postFix = postFix + currScan;
+		} 
+			updateVisualization(i, tokens, postFix);
+  		} 
+	
 	var top = stackObj.getTop();
-	
-	
-	if(top != null){ 
-		document.getElementById("visual").innerHTML += "<h1> Poping stack....</h1>";
-		while(top){
-			postFix += stackObj.pop();
-			top = stackObj.getTop();
+  	if(top != null){ 
+		document.getElementById("visual").innerHTML += "<h1> Popping stack....</h1>";
+	 	while(top) {
+  			postFix += stackObj.pop();
+  			top = stackObj.getTop();
 		}
-	}
-	updateVisualization(i, tokens, postFix);
-	document.getElementById("visual").innerHTML += "<h1> Result: " + postFix + 
-	"</h1><hr>";
+  	}
+  	updateVisualization(i, tokens, postFix);
+  	document.getElementById("visual").innerHTML += "<h1> Result: " + postFix + "</h1><hr>";
 	return postFix;
 }
+
 function clear()
 {
   document.getElementById("visual").innerHTML = "";
@@ -165,36 +174,44 @@ function clear()
 }
 
 var evaluatePostfix = function(stringIn){
+	var results = [];
+	
 	for(var i = 0; i < stringIn.length; i++){
-		if(isOperator(stringIn[i]) == false){
+		if(i==stringIn.length){
+			result[0] = stackObj.pop;
+		}else if(isOperator(stringIn[i]) == false){
 			stackObj.push(stringIn[i]);
+			
 		}else{
-			var a = stackObj.pop();
-			var b = stackObj.pop();
+			var a = parseFloat(stackObj.pop());
+			var b = parseFloat(stackObj.pop());
 			var c = 0;
 			if (stringIn[i] == "+"){
-				c = a + b;
+				c = b + a;
 			}	
 			else if (stringIn[i] == "-"){
-				c = a - b;
+				c = b - a;
 			}   
 			else if (stringIn[i] == "*"){
 				c = a * b;
 			}
 			else if (stringIn[i] == "/"){
-				c = a / b;
+				c = b / a;
 			}
 			else if (stringIn[i] == "^"){
-				c = a;
-				for(var i = 1; i <= b; i++){
-					c = c * a;
+				c = b;
+				if(a == 0){
+					c = 1;
+				} 
+				for(var i = 2; i <= a; i++){
+					c = c * b;
 				}
 			}
-			stackObj.push(c);	
+		stackObj.push(c);	
 		}
 	}
-	return stackObj.pop();
 }
+
 </script>
 
 
