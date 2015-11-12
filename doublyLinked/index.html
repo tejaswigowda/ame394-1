@@ -36,7 +36,6 @@
 <script src='jquery-1.11.3.js'> </script>
 <script src='Sortable.min.js'> </script>
 <script>
-var swapArray = [];
 var linkedList = {
     initialize:function(initLL, head, tail){
       //initLL is an array of Node Objects --- [{id:"", next:"", data: {}}, {}, {}],
@@ -44,6 +43,8 @@ var linkedList = {
       linkedList.head = head;
       linkedList.tail = tail;
     },
+	
+	
     getListIDsFromTail: function(){
     },
     getListIDsFromHead: function(){
@@ -64,37 +65,30 @@ var linkedList = {
     head: null,
     tail: null,
  
-    addNodeBefore: function(nodeData, beforeNodeID, nodeID){
+    addNodeBefore: function(nodeData, beforeNodeID, afterNodeID, nodeID){
       var newID = nodeID || new Date().getTime();
       beforeNodeID = beforeNodeID || linkedList.head;
+	  afterNodeID = afterNodeID || linkedList.tail;
       var newNode = {
           id: newID,
           data: nodeData,
           next: beforeNodeID,
-		  prev: -1
+		  prev: afterNodeID
       }
+
       if(linkedList.head == null){
         linkedList.head = newID;
       }
-      if(beforeNodeID){
-		  var prevPos  = linkedList.getParentPos(beforeNodeID);
-		  var nextPos = linkedList.getChild(beforeNodeID);
-		  if(prevPos >= 0){
-			  linkedList.nodes[prevPos].next = newID;
-		  }
-		  if(nextPos == 0)
-			  linkedList.nodes[prevPos].prev = -1;
-		  if(nextPos > 0){
-			 linkedList.nodes[prevPos].prev = nextPos.id;
-			 //this line is my issue. not sure how to solve it.
-		  }
-	  }
 	  
+      if(beforeNodeID){
+          var prevPos  = linkedList.getParentPos(beforeNodeID);
+          if(prevPos >= 0)
+            linkedList.nodes[prevPos].next = newID;
+      }
       if(beforeNodeID == linkedList.head){
         linkedList.head = newID;
       }
       linkedList.nodes[linkedList.nodes.length] = newNode;
-	  
     },
 	
     isEmpty: function()
@@ -104,65 +98,42 @@ var linkedList = {
       }
        return false;
     },
-
-    deleteNode: function(id){
+	
+    deleteNode: function(id){//alter for A4
         var pos = linkedList.getNodePos(id);
         var prevPos  = linkedList.getParentPos(id);
-		var nextPos = linkedList.getChildPos(id);
+		var nextPos = linkedList.getChild(id);
+		var prev = linkedList.getNode(id).prev || linkedList.head;
         var next = linkedList.getNode(id).next;
-		var prev = linkedList.getNode(id).prev;
         if(prevPos >= 0){
-			linkedList.nodes[prevPos].next = next
-		}
-	    if(nextPos == 0)
-		  linkedList.nodes[prevPos].prev = -1;
-	  
-		if(prevPos > 0){
-			//linkedList.nodes[nextPos].prev = prev;
-		}
+          linkedList.nodes[prevPos].next = next;
+		  if(linkedList.nodes[prevPos].prev != null){
+		  linkedList.nodes[prevPos].prev = prev;
+		  }
+		  
+	  }
         linkedList.nodes.splice(pos, 1);
         if(id == linkedList.head){
           linkedList.head = next; 
         }
     },
 	
+	
     getNodeFromPos: function(pos){
       var ordList = linkedList.getListIDsFromHead();
       return ordList[pos];
     },
-
-
-
-    swapNodes: function(fromPos, toPos){ //alter for A4
-		var moveData = linkedList.getNodeFromPos(fromPos);
-		var newPlace = linkedList.getNodeFromPos(toPos);
-		var deleteID = linkedList.getNodeFromPos(fromPos).id;
-		var insertBeforeID =linkedList.getNodeFromPos(toPos).id;
-		
-		
-		
-		// your code here
-		//var swap;
-		//swap = x;
-		//x = y;
-    	//	y = swap;
-		// end code
-		
-		
-		console.log("moveData "+moveData);
-		console.log("deleteId "+deleteID);
-		console.log("insert "+insertBeforeID);
-		console.log("fromPos "+fromPos);
-		console.log("toPos "+toPos);
-		
-		linkedList.deleteNode(deleteID);
-		linkedList.addNodeBefore(moveData.data, insertBeforeID, moveData.id);
-		console.log(fromPos);
-		console.log(toPos);
 	
-	},
-
-		
+    swapNodes: function(fromPos, toPos){ //alter for A4
+      var moveData = linkedList.getNodeFromPos(fromPos);
+      var deleteID = linkedList.getNodeFromPos(fromPos).id;
+      var insertBeforeID =  linkedList.getNodeFromPos(toPos).id;
+	  var insertAfterID = linkedList.getNodeFromPos(toPos).id;
+      linkedList.deleteNode(deleteID);
+      linkedList.addNodeBefore(moveData.data, insertBeforeID, insertAfterID, moveData.id);
+      console.log(fromPos);
+      console.log(toPos);
+    },
     getParent: function(id){
       var list = linkedList.nodes;
       var ret = null;
@@ -174,19 +145,17 @@ var linkedList = {
       }
       return ret;
     },
-	
-    getChild: function (id){ 
-		var list = linkedList.nodes;
-		var ret = null;
-		for(var i = 0; i < list.length; i++){
-			if(linkedList.getNodePos(list[i].id).prev === id){
+    getChild: function (id){  //complete for A4
+        var list = linkedList.nodes;
+        var ret = null;
+        for(var i = list.length; i < 0; i--){
+          if(linkedList.getNodePos(list[i].id).next === id){
             ret = list[i];
             break;
           }
         }
         return ret;
-      },
-	
+    },
     getNode: function(id){
       var list = linkedList.nodes;
       var ret = null;
@@ -198,7 +167,6 @@ var linkedList = {
       }
       return ret;
     },
-	
     getParentPos: function(id){
       var pos = -1;
       var list = linkedList.nodes;
@@ -210,19 +178,6 @@ var linkedList = {
       }
       return pos;
     },
-	
-    getChildPos: function(id){
-      var pos = -1;
-      var list = linkedList.nodes;
-      for(var i = 0; i < list.length; i++){
-        if(list[i].prev === id){
-          pos = i;
-          break;
-        }
-      }
-      return pos;
-    },
-	
     getNodePos: function(id){
       var pos = -1;
       var list = linkedList.nodes;
@@ -235,23 +190,7 @@ var linkedList = {
       return pos;
     }
 }
-
-
-/*
-var x = 5;
-var y = 10;
-// your code here
-var swap;
-swap = x;
-x = y;
-y = swap;
-// end code
-console.log(x);
-console.log(y);
-*/
-
 var sortable;
-
 function startUp(){
   var el = document.getElementById('theList');
   sortable = Sortable.create(el, {
@@ -260,9 +199,7 @@ function startUp(){
         }
      }
    );
-
 }
-
 function addLink(){
   var text = prompt("Add new node:");
   if(text == null) return;
@@ -273,14 +210,12 @@ function addLink(){
                        );
   linkedList.addNodeBefore(text, null, id);
 }
-
 function removeLink(id){
   if(confirm("Delete node ID: " + id)){
     $("#theList ." + id).remove();
     linkedList.deleteNode(id);
   }
 }
-
 </script>
 </head>
 
