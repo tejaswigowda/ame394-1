@@ -327,14 +327,19 @@ function generatePreview()
         Parent.appendChild(NewNode);   
         pathAlongDOM.push(NewNode); 
          
-         console.log("Depth First (from JSON):");
+         console.log("Depth First (from tree1):");
          traverseDepthFirst(treeIn);
-         console.log("Breadth First (from JSON):");
+         console.log("Breadth First (from tree1):");
          traverseBreadthFirst(treeIn);
-         console.log("Depth First (from live):");
-         traverseDepthFirst(theHTMLTree);
-         console.log("Breadth First (from live):");
-         traverseBreadthFirst(theHTMLTree);
+                  console.log("Depth First (from tree2):");
+         traverseDepthFirst(treeIn2);
+         console.log("Breadth First (from tree2):");
+         traverseBreadthFirst(treeIn2);
+                  console.log("Depth First (from tree3):");
+         traverseDepthFirst(treeIn3);
+         console.log("Breadth First (from tree3):");
+         traverseBreadthFirst(treeIn3);
+        
 
 
         return true;
@@ -346,5 +351,11 @@ function generatePreview()
 
 
 var tree1 = '[{"id":"1447692676177","name":"<BODY>","nodeID":"","type":"BODY","style":"","className":"","innerHTML":"","is_open":true,"children":[{"id":"1447692680511","name":"Wrapper 1","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":false,"children":[{"id":"1447692749749","name":"H1","nodeID":"","style":"","className":"","innerHTML":"","type":"H1"},{"id":"1447692766027","name":"H2","nodeID":"","style":"","className":"","innerHTML":"","type":"H2"},{"id":"1447692786169","name":"Para","nodeID":"","style":"","className":"","innerHTML":"","type":"p"}]},{"id":"1447692712967","name":"Wrapper 2","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":false,"children":[{"id":"1447692740254","name":"H1","nodeID":"","style":"","className":"","innerHTML":"","type":"H1"},{"id":"1447692765760","name":"H2","nodeID":"","style":"","className":"","innerHTML":"","type":"H2"},{"id":"1447692786474","name":"Para","nodeID":"","style":"","className":"","innerHTML":"","type":"p"}]}]}]';
+var tree2 = '[{"id":"1447821849583","name":"<BODY>","nodeID":"","type":"BODY","style":"","className":"","innerHTML":"","is_open":true,"children":[{"id":"1447821875018","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821875185","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821874515","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"},{"id":"1447821873496","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821873845","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"}]},{"id":"1447821874029","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"}]}]},{"id":"1447821874684","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821873677","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"},{"id":"1447821874849","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"}]}]}]'
+var tree2Root = "1447821849583";
+
+var tree3 = '[{"id":"1447821972921","name":"<BODY>","nodeID":"","type":"BODY","style":"","className":"","innerHTML":"","is_open":true,"children":[{"id":"1447821974587","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821975009","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"},{"id":"1447821974734","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"},{"id":"1447821974420","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821974111","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"}]},{"id":"1447821974884","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV","is_open":true,"children":[{"id":"1447821974261","name":"<DIV>","nodeID":"","style":"","className":"","innerHTML":"","type":"DIV"}]}]}]}]';
 var treeIn = JSON.parse(tree1);
+var treeIn2 = JSON.parse(tree2);
+var treeIn3 = JSON.parse(tree3);
 var treeStack = [];        
