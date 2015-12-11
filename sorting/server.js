@@ -4,6 +4,9 @@ var jsonObj = require("./feed.json");
     jsonObj[i].date = new Date(jsonObj[i].date).getTime();
   }
 
+var allTags = getTags();
+var allCats = getCats();
+
 var express = require("express"),
 app = express();
 var bodyParser = require('body-parser');
@@ -18,6 +21,18 @@ app.get("/", function (req, res) {
 
 app.get("/getSortedJSON", function (req, res) {
     res.redirect("/index.html");
+});
+
+app.get("/", function (req, res) {
+    res.redirect("/index.html");
+});
+app.get("/getTags", function (req, res) {
+    res.send(getAllTags());
+	res.end;
+});
+app.get("/getCats", function (req, res) {
+    res.send(getAllCats());
+	res.end;
 });
 
 app.use(methodOverride());
