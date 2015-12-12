@@ -99,13 +99,54 @@ function selectionSort(key)
   return arr;
 }
 
+function getTags() {
+	var tags = [];
+	objs = jsonObj;
+  	for(int i=0; i < objs.length; i++){
+		for (int j = 0; j < objs[i].tags.length; j++) {
+			var tag = objs[i].tags[j].slug;
+			var isInList = false;
+			for (int k = 0; k < tags.length; k++) {
+				if (tags[k]==tag) {
+					isInList = true;				}
+			}
+			if (isInList == false) {
+				tags.push(tag);
+			}
+		}
+	
+	}
+
+	return tags;
+}
+
+
+function getCats() {
+	var cats = [];
+	objs = jsonObj;
+  	for(int i=0; i < objs.length; i++){
+		for (int j = 0; j < objs[i].categories.length; j++) {
+			var cat = objs[i].categories[j].slug;
+			var isInList = false;
+			for (var k = 0; k < cats.length; k++) {
+				if (cats[k]==cat) {
+					isInList = true;
+				}
+			}
+			if (isInList == false) {
+				cats.push(cat);
+			}
+		}
+	
+	}
+	console.log(cats);
+	return cats;
+}
+
+
 function getAllTags() {
 	return allTags.toString();
 }
 function getAllCats() {
 	return allCats.toString();
 }
-
-console.log(selectionSort("title"));
-console.log(insertionSort("title"));
-console.log(bubbleSort("title"));
