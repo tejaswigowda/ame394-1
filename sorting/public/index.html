@@ -164,7 +164,7 @@ function sortChanged()
   loadURL(url, function(data){
     objs = JSON.parse(data);
     var outS = "";
-    for(var i=0; i < objs.length; i++){
+    for(var i=0; i <= objs.length-1; i++){
       outS += 
           "<li class='listItem'>"+
             "<div>"+ objs[i].id + "</div>" +

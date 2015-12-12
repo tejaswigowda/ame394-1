@@ -1,3 +1,6 @@
+var url = require('url'); /* expose url object to var url */
+var querystring = require('querystring'); 
+
 var jsonObj = require("./feed.json");
   for (var i = 0; i < jsonObj.length - 1; i++)
   {
@@ -102,11 +105,11 @@ function selectionSort(key)
 function getTags() {
 	var tags = [];
 	objs = jsonObj;
-  	for(int i=0; i < objs.length; i++){
-		for (int j = 0; j < objs[i].tags.length; j++) {
+  	for(var i=0; i < objs.length; i++){
+		for (var j = 0; j < objs[i].tags.length; j++) {
 			var tag = objs[i].tags[j].slug;
 			var isInList = false;
-			for (int k = 0; k < tags.length; k++) {
+			for (var k = 0; k < tags.length; k++) {
 				if (tags[k]==tag) {
 					isInList = true;				}
 			}
@@ -124,8 +127,8 @@ function getTags() {
 function getCats() {
 	var cats = [];
 	objs = jsonObj;
-  	for(int i=0; i < objs.length; i++){
-		for (int j = 0; j < objs[i].categories.length; j++) {
+  	for(var i=0; i < objs.length; i++){
+		for (var j = 0; j < objs[i].categories.length; j++) {
 			var cat = objs[i].categories[j].slug;
 			var isInList = false;
 			for (var k = 0; k < cats.length; k++) {
