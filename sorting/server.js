@@ -23,7 +23,23 @@ app.get("/", function (req, res) {
 });
 
 app.get("/getSortedJSON", function (req, res) {
-    res.redirect("/index.html");
+  var query = url.parse(req.url).query;
+  var params = querystring.parse(query);
+  var alg = params.alg || "bubble";
+  var key = params.key || "id";
+  var result = [];
+  
+  if(alg === "bubble"){
+    result = bubbleSort(key); 
+  }
+  else if(alg === "insertion"){
+    result = insertionSort(key); 
+  }
+  else if(alg === "selection"){
+    result = selectionSort(key); 
+  }
+  res.send(JSON.stringify(result));
+  res.end();
 });
 
 app.get("/", function (req, res) {
